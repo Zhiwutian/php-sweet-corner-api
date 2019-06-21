@@ -1,28 +1,29 @@
 <?php
 
+require_once('setup.php');
+
 $output = [
     'success' => false
 ];
 
-require_once('mysql-connect.php');
 
-if(empty($output['error'])){
+
     $query = "SELECT `id`, `name`, `email` FROM `users`";
 
-    $result = mysqli_query($conn, $query);
+    $result = $conn->query($query);
 
     if($result){
         $output['success'] = true;
-        if(mysqli_num_rows($result)){
-            while($row = mysqli_fetch_assoc($result)){
+        if($result->num_rows){
+            while($row = $result->fetch_assoc()){
                 $output['users'][] = $row;
             }
         } else {
             $output['users'] = [];
         }
     } else {
-        $output['error'] = 'Error getting data';
+        throw new ApiException($output, 500, "Database error");
     }
-}
+
 
 print json_encode($output);
