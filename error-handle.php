@@ -28,6 +28,9 @@ class ApiException extends Exception {
 }
 
 function defaultExceptionHandler($ex) {
-    $ex->sendError();
+    if($ex instanceof ApiException) {
+        $ex->sendError();
+    }
+    print_r($ex);
 }
 set_exception_handler('defaultExceptionHandler');
