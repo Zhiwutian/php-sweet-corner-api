@@ -36,11 +36,13 @@ if(!empty($output['errors'])) {
 
 
 $query = "INSERT INTO `users` (`name`, `email`, `password`, `created_at`, `updated_at`)
-    VALUES ('$name', '$email', '$password', CURRENT_TIME, CURRENT_TIME)";
+    VALUES (?, ?, ?, CURRENT_TIME, CURRENT_TIME)";
 
-$result = $conn->query($query);
+$stmt = $conn->prepare($query);
 
-if($result){
+$stmt->bind_param('sss', $name, $email, $password);
+
+if($stmt->execute()){
     if($conn->affected_rows){
         $insertedId = $conn->insert_id;
 
